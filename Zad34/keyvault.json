@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "tZad32Ubuntuvm1AdminUserName": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/e1e09677-0272-4576-93c4-8cee7b76aad0/resourceGroups/KMTest/providers/Microsoft.KeyVault/vaults/tZad34kv1"
+          },
+          "secretName": "AdminAccount"
+        }
+      },
+  
+      "tZad32Ubuntuvm1AdminPassword": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/e1e09677-0272-4576-93c4-8cee7b76aad0/resourceGroups/KMTest/providers/Microsoft.KeyVault/vaults/tZad34kv1"
+          },
+          "secretName": "AdminPwd"
+        }
+      }
+    }
+  }
