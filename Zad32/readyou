@@ -1,1 +1,5 @@
 Glowny json azuredeploy tworzy VNET, 2x subnet, 2 x nsg (sztuka per subnet). W pliku jest odwołanie do arma azuredeploy z folderu LinkedJson ("fizycznie" plik znajduje się na tymczasowym blobie) który tworzy Storage, Vmki i NICi.
+
+...(10 min później)...
+Update :
+By nie generować kosztów na subskrypcji trialowej usunąłem wszystkie elementy... łącznie z storage na którym trzymałęm jsony z LInkedJson folderu ;)  
