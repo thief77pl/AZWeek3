@@ -1,1 +1,2 @@
-1. Dodanie/skopiowanie zawartości pliku do pliku xxxx.parameters.json + aktywowanie "Enable access to AVM..." i  "Enable access to ARM..." w Advanced access policy w KeyVault
+By poprawnie działał dostęp do sekretów należy:
+Dodanie/skopiowanie zawartości pliku do pliku xxxx.parameters.json + aktywowanie "Enable access to AVM..." i  "Enable access to ARM..." w Advanced access policy w KeyVault
