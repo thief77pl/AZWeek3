@@ -1,1 +1,11 @@
-test
+W moich pracach domowych przyjąłem poniższą konwencję nazewniczą:
+1. nazwy składają się z 3 elementów, pisanych łącznie. Pierwszy moduł to litera, która określa rodzaj środowiska:
+- T (testowe)
+- S (przedprodukcyjne)
+- P (produkcyjne)
+2. Drugi człon ma za zadanie opisać przeznaczenie danego obiektu, przynależność do większej grupy, jego zastosowanie, funkcjonalność albo np nazwę projektu którego jest częścią składową
+3. ostatni element nazwy to usługa/element środowiska Azure, zakończony numeracją (jako, że istnieje duże prawdopodobieństwo wystąpienia więcej niż jednego elementu tego samego typu)
+
+Przykład:
+tZad32Vm1 - środowisko testowe, Zad32 - projekt o nazwie Zad32 (praca domowa), Vm1 - maszyna wirtualna numer 1 w ramach wspomnianego Zad32
+
