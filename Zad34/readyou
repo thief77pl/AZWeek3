@@ -1,2 +1,2 @@
 By poprawnie działał dostęp do sekretów należy:
-Dodanie/skopiowanie zawartości pliku do pliku xxxx.parameters.json + aktywowanie "Enable access to AVM..." i  "Enable access to ARM..." w Advanced access policy w KeyVault
+Dodanie/skopiowanie zawartości pliku do pliku xxxx.parameters.json (od tworzenia VMek, gdzie znajdują się adekwatne parametry typu nazwa i haslo konta OSu) + aktywowanie "Enable access to AVM..." i  "Enable access to ARM..." w Advanced access policy w KeyVault
