@@ -1,0 +1,29 @@
+{
+  "Name":  "Zad33 - custom role",
+  "Id":  "88888888-8888-8888-8888-888888888888",
+  "IsCustom":  true,
+  "Description":  "Start/Stop VM, create ticket to Support",
+  "Actions":  [
+  
+        "Microsoft.Compute/virtualMachines/*/read",
+        "Microsoft.Compute/virtualMachines/start/action",
+        "Microsoft.Compute/virtualMachines/restart/action",
+        "Microsoft.Compute/virtualMachines/powerOff/action",
+        "Microsoft.Compute/virtualMachines/deallocate/action",
+        "Microsoft.Support/*"
+
+
+  ],
+  "NotActions":  [
+
+                 ],
+  "DataActions":  [
+
+                  ],
+  "NotDataActions":  [
+
+                     ],
+  "AssignableScopes":  [
+                           "/subscriptions/{subscriptionId1}"
+                       ]
+}
