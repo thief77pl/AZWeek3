@@ -1,0 +1,263 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "tzad32ubuntustorage1Type": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+
+    "tzad32ubuntustorage2Type": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+    "tZad32Ubuntuvm1Name": {
+      "type": "string",
+      "defaultValue": "tZad32ub1",
+      "minLength": 1
+    },
+
+    "tZad32Ubuntuvm2Name": {
+      "type": "string",
+      "defaultValue": "tZad32ub2",
+      "minLength": 1
+    },
+
+    "tZad32Ubuntuvm1AdminUserName": {
+      "type": "string",
+      "defaultValue": "Krzych",
+      "minLength": 1
+    },
+    "tZad32Ubuntuvm1AdminPassword": {
+      "type": "string",
+      "defaultValue": "HuziaNaJuzia02!"
+    },
+    "tZad32Ubuntuvm1UbuntuOSVersion": {
+      "type": "string",
+      "defaultValue": "18.04-LTS",
+      "allowedValues": [
+        "12.04.5-LTS",
+        "14.04.2-LTS",
+        "18.04-LTS"
+      ]
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "tZad32vnet1"
+    },
+    "virtualNetworkResourceGroup": {
+      "type": "string",
+      "defaultValue": "KMTest"
+    }
+  },
+  "variables": {
+    "tzad32ubuntustorage1Name": "tzad32ubuntustorage1",
+    "tZad32Ubuntuvm1ImagePublisher": "Canonical",
+    "tZad32Ubuntuvm1ImageOffer": "UbuntuServer",
+    "tZad32Ubuntuvm1OSDiskName": "tZad32Ubuntuvm1OSDisk",
+    "tZad32Ubuntuvm1VmSize": "Standard_D2_v2",
+    "tZad32Ubuntuvm1VnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "tZad32Ubuntuvm1SubnetRef": "[concat(variables('tZad32Ubuntuvm1VnetID'), '/subnets/', 'tZad32subnet11')]",
+    "tZad32Ubuntuvm1StorageAccountContainerName": "vhds",
+    "tZad32Ubuntuvm1NicName": "[concat(parameters('tZad32Ubuntuvm1Name'), 'NetworkInterface')]",
+
+    "tzad32ubuntustorage2Name": "tzad32ubuntustorage2",
+    "tZad32Ubuntuvm2OSDiskName": "tZad32Ubuntuvm2OSDisk",
+    "tZad32Ubuntuvm2VmSize": "Standard_D2_v2",
+    "tZad32Ubuntuvm2VnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "tZad32Ubuntuvm2SubnetRef": "[concat(variables('tZad32Ubuntuvm2VnetID'), '/subnets/', 'tZad32subnet12')]",
+    "tZad32Ubuntuvm2StorageAccountContainerName": "vhds",
+    "tZad32Ubuntuvm2NicName": "[concat(parameters('tZad32Ubuntuvm2Name'), 'NetworkInterface')]"
+  
+  },
+
+
+  "resources": [
+    {
+      "name": "[variables('tzad32ubuntustorage1Name')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('tzad32ubuntustorage1Type')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "tzad32ubuntustorage1"
+      },
+      "kind": "Storage"
+    },
+    {
+      "name": "[variables('tZad32Ubuntuvm1NicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "westeurope",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "tZad32Ubuntuvm1Nic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('tZad32Ubuntuvm1SubnetRef')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('tZad32Ubuntuvm1Name')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('tzad32ubuntustorage1Name'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('tZad32Ubuntuvm1NicName'))]"
+      ],
+      "tags": {
+        "displayName": "tZad32Ubuntuvm1"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('tZad32Ubuntuvm1VmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('tZad32Ubuntuvm1Name')]",
+          "adminUsername": "[parameters('tZad32Ubuntuvm1AdminUsername')]",
+          "adminPassword": "[parameters('tZad32Ubuntuvm1AdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('tZad32Ubuntuvm1ImagePublisher')]",
+            "offer": "[variables('tZad32Ubuntuvm1ImageOffer')]",
+            "sku": "[parameters('tZad32Ubuntuvm1UbuntuOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "tZad32Ubuntuvm1OSDisk",
+            "vhd": {
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('tzad32ubuntustorage1Name')), '2016-01-01').primaryEndpoints.blob, variables('tZad32Ubuntuvm1StorageAccountContainerName'), '/', variables('tZad32Ubuntuvm1OSDiskName'), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('tZad32Ubuntuvm1NicName'))]"
+            }
+          ]
+        }
+      }
+    },
+
+
+    {
+      "name": "[variables('tzad32ubuntustorage2Name')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('tzad32ubuntustorage2Type')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "tzad32ubuntustorage2"
+      },
+      "kind": "Storage"
+    },
+    {
+      "name": "[variables('tZad32Ubuntuvm2NicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "westeurope",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "tZad32Ubuntuvm2Nic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('tZad32Ubuntuvm2SubnetRef')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('tZad32Ubuntuvm2Name')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('tzad32ubuntustorage2Name'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('tZad32Ubuntuvm2NicName'))]"
+      ],
+      "tags": {
+        "displayName": "tZad32Ubuntuvm2"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('tZad32Ubuntuvm1VmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('tZad32Ubuntuvm2Name')]",
+          "adminUsername": "[parameters('tZad32Ubuntuvm1AdminUsername')]",
+          "adminPassword": "[parameters('tZad32Ubuntuvm1AdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('tZad32Ubuntuvm1ImagePublisher')]",
+            "offer": "[variables('tZad32Ubuntuvm1ImageOffer')]",
+            "sku": "[parameters('tZad32Ubuntuvm1UbuntuOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "tZad32Ubuntuvm2OSDisk",
+            "vhd": {
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('tzad32ubuntustorage2Name')), '2016-01-01').primaryEndpoints.blob, variables('tZad32Ubuntuvm2StorageAccountContainerName'), '/', variables('tZad32Ubuntuvm2OSDiskName'), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('tZad32Ubuntuvm2NicName'))]"
+            }
+          ]
+        }
+      }
+    }
+
+
+
+  ],
+  "outputs": {}
+}

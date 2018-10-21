@@ -1,0 +1,104 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkSecurityGroupName_tZad32nsg11_name": {
+      "defaultValue": "tZad32nsg11",
+      "type": "string"
+    },
+    "networkSecurityGroupName_tZad32nsg12_name": {
+      "defaultValue": "tZad32nsg12",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "tZad32vnet1Prefix": "10.0.0.0/16",
+    "tZad32vnet1Subnet1Name": "tZad32subnet11",
+    "tZad32vnet1Subnet1Prefix": "10.0.1.0/24",
+    "tZad32vnet1Subnet2Name": "tZad32subnet12",
+    "tZad32vnet1Subnet2Prefix": "10.0.2.0/24",
+    "tZad32vnet1Subnet1NSG1Name": "tZad32nsg11",
+    "tZad32vnet1Subnet1NSG2Name": "tZad32nsg12"
+
+
+  },
+  "resources": [
+
+    {
+      "apiVersion": "2018-02-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('networkSecurityGroupName_tZad32nsg11_name')]",
+      "location": "westeurope",
+      "properties": {}
+    },
+
+    {
+      "apiVersion": "2018-02-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('networkSecurityGroupName_tZad32nsg12_name')]",
+      "location": "westeurope",
+      "properties": {}
+    },
+
+    {
+      "name": "tZad32vnet1",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2018-08-01",
+      "tags": {
+        "displayName": "tZad32vnet1"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('tZad32vnet1Prefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('tZad32vnet1Subnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('tZad32vnet1Subnet1Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName_tZad32nsg11_name'))]"
+              }
+            }
+          },
+          {
+            "name": "[variables('tZad32vnet1Subnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('tZad32vnet1Subnet2Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName_tZad32nsg12_name'))]"
+              }
+            }
+
+
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName_tZad32nsg11_name'))]"
+      ]
+    },
+
+    {
+      "apiVersion": "2017-05-10",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://staroageaz.blob.core.windows.net/json/azuredeploy.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "https://staroageaz.blob.core.windows.net/json/azuredeploy.parameters.json",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }
+
+  ],
+    "outputs": {}
+  }
